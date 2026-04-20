@@ -3,18 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'core/theme/app_theme.dart';
-import 'providers/auth_provider.dart';
-import 'providers/spot_provider.dart';
-import 'providers/recommendation_provider.dart';
-import 'providers/itinerary_provider.dart';
-import 'data/services/auth_service.dart';
-import 'features/auth/login_screen.dart';
-import 'features/home/home_screen.dart';
+import 'core/theme/theme_notifier.dart';
+import 'features/motivations/motivation_screen.dart';
+import 'providers/motivation_provider.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Status bar style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -22,30 +17,30 @@ void main() async {
     ),
   );
 
-  // Cek apakah sudah login
-  final isLoggedIn = await AuthService.isLoggedIn();
-
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool isLoggedIn;
-  const MyApp({super.key, required this.isLoggedIn});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()..init()),
-        ChangeNotifierProvider(create: (_) => SpotProvider()),
-        ChangeNotifierProvider(create: (_) => RecommendationProvider()),
-        ChangeNotifierProvider(create: (_) => ItineraryProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+        ChangeNotifierProvider(create: (_) => MotivationProvider()),
       ],
-      child: MaterialApp(
-        title: 'Smart Tourism Samosir',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        home: isLoggedIn ? const HomeScreen() : const LoginScreen(),
+      child: Consumer<ThemeNotifier>(
+        builder: (context, themeNotifier, _) {
+          return MaterialApp(
+            title: 'Delcom Motivation',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: themeNotifier.themeMode,
+            home: const MotivationScreen(),
+          );
+        },
       ),
     );
   }

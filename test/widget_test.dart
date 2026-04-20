@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:pam_p9_2026_ifs18005/main.dart';
+import 'package:pam_2026_p9_ifs23021_fe/main.dart';
 
 void main() {
   testWidgets('app renders main screen', (WidgetTester tester) async {
