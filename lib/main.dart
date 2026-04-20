@@ -1,35 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'core/theme/app_theme.dart';
-import 'core/theme/theme_notifier.dart';
-import 'providers/motivation_provider.dart';
-import 'features/motivations/motivation_screen.dart';
+import 'providers/auth_provider.dart';
+import 'providers/spot_provider.dart';
+import 'providers/recommendation_provider.dart';
+import 'providers/itinerary_provider.dart';
+import 'data/services/auth_service.dart';
+import 'features/auth/login_screen.dart';
+import 'features/home/home_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Status bar style
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
+
+  // Cek apakah sudah login
+  final isLoggedIn = await AuthService.isLoggedIn();
+
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => MotivationProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()..init()),
+        ChangeNotifierProvider(create: (_) => SpotProvider()),
+        ChangeNotifierProvider(create: (_) => RecommendationProvider()),
+        ChangeNotifierProvider(create: (_) => ItineraryProvider()),
       ],
-      child: Consumer<ThemeNotifier>(
-        builder: (context, theme, _) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            themeMode: theme.themeMode,
-            home: const MotivationScreen(),
-          );
-        },
+      child: MaterialApp(
+        title: 'Smart Tourism Samosir',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        home: isLoggedIn ? const HomeScreen() : const LoginScreen(),
       ),
     );
   }
