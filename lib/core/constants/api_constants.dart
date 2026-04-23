@@ -4,5 +4,5 @@ class ApiConstants {
 
   // Motivations
   static const String motivations = "$baseUrl/motivations";
-  static const String generate = "$baseUrl/motivations/generate";
+  static const String generate = "$baseUrl/recommendations/generate";
 }
