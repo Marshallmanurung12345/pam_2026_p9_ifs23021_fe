@@ -1,7 +1,9 @@
 class ApiConstants {
-  // Ganti dengan URL deploy kamu saat production
-  static const String baseUrl =
-      "https://pam-2026-p9-ifs23021.marshalll.fun:8080";
+  // Override dengan --dart-define=API_BASE_URL=...
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: "https://pam-2026-p9-ifs23021.marshalll.fun:8080",
+  );
 
   // Auth
   static const String login = "$baseUrl/auth/login";

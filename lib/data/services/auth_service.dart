@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/constants/api_constants.dart';
@@ -18,11 +19,18 @@ class AuthService {
     required String username,
     required String password,
   }) async {
-    final response = await http.post(
-      Uri.parse(ApiConstants.login),
-      headers: const {'Content-Type': 'application/json'},
-      body: jsonEncode({'username': username, 'password': password}),
-    );
+    late final http.Response response;
+    try {
+      response = await http.post(
+        Uri.parse(ApiConstants.login),
+        headers: const {'Content-Type': 'application/json'},
+        body: jsonEncode({'username': username, 'password': password}),
+      );
+    } on http.ClientException {
+      throw AuthException(_networkErrorMessage());
+    } catch (_) {
+      throw AuthException(_networkErrorMessage());
+    }
 
     if (response.statusCode != 200) {
       throw AuthException('Login gagal: ${response.statusCode}');
@@ -39,10 +47,17 @@ class AuthService {
   }
 
   static Future<Map<String, dynamic>> getCurrentUser(String token) async {
-    final response = await http.get(
-      Uri.parse(ApiConstants.me),
-      headers: {'Authorization': 'Bearer $token'},
-    );
+    late final http.Response response;
+    try {
+      response = await http.get(
+        Uri.parse(ApiConstants.me),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+    } on http.ClientException {
+      throw AuthException(_networkErrorMessage());
+    } catch (_) {
+      throw AuthException(_networkErrorMessage());
+    }
 
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
@@ -78,5 +93,13 @@ class AuthService {
     }
 
     return null;
+  }
+
+  static String _networkErrorMessage() {
+    if (kIsWeb) {
+      return 'Gagal menghubungi server. Jika memakai Flutter Web, backend harus mengizinkan CORS untuk origin aplikasi ini.';
+    }
+
+    return 'Gagal menghubungi server. Periksa koneksi atau API base URL.';
   }
 }

@@ -46,10 +46,41 @@ class _MotivationScreenState extends State<MotivationScreen> {
   String formatDate(String date) {
     try {
       final parsed = DateTime.parse(date);
-      return DateFormat("dd MMM yyyy, HH:mm").format(parsed);
+      return DateFormat("dd MMM yyyy, HH:mm", "id_ID").format(parsed);
     } catch (_) {
       return date;
     }
+  }
+
+  Widget _buildMetaChip({
+    required IconData icon,
+    required String label,
+    Color backgroundColor = const Color(0x1FFFFFFF),
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Colors.white24),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: Colors.white70),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void showGenerateDialog() {
@@ -251,31 +282,42 @@ class _MotivationScreenState extends State<MotivationScreen> {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "#$number",
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    formatDate(item.createdAt),
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0.2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  _buildMetaChip(
+                                    icon: Icons.location_on_outlined,
+                                    label: "Rekomendasi wisata",
+                                  ),
+                                ],
                               ),
-                              Text(
-                                formatDate(item.createdAt),
-                                style: const TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 11,
-                                ),
+                              _buildMetaChip(
+                                icon: Icons.tag,
+                                label: "#$number",
+                                backgroundColor: const Color(0x26FFFFFF),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 18),
                           Text(
                             item.placeName,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 24,
                               fontWeight: FontWeight.w700,
-                              height: 1.5,
+                              height: 1.3,
                             ),
                           ),
                           const SizedBox(height: 12),
