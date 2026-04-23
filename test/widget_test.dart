@@ -14,7 +14,7 @@ void main() {
   testWidgets('app renders main screen', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
-    expect(find.text('Delcom Motivation'), findsOneWidget);
+    expect(find.text('Wisata Samosir'), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
   });
 }

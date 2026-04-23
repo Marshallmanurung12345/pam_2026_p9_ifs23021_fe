@@ -37,9 +37,9 @@ class _MotivationScreenState extends State<MotivationScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   String formatDate(String date) {
@@ -65,18 +65,14 @@ class _MotivationScreenState extends State<MotivationScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              title: Row(
-                children: const [
-                  Text("Generate Motivasi"),
-                ],
-              ),
+              title: Row(children: const [Text("Cari Wisata Samosir")]),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: themeController,
                     decoration: InputDecoration(
-                      labelText: "Theme",
+                      labelText: "Kata kunci atau Preferensi",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -107,11 +103,14 @@ class _MotivationScreenState extends State<MotivationScreen> {
                       ? null
                       : () async {
                           final theme = themeController.text.trim();
-                          final total =
-                              int.tryParse(totalController.text.trim());
+                          final total = int.tryParse(
+                            totalController.text.trim(),
+                          );
 
                           if (theme.isEmpty) {
-                            _showMessage("Theme wajib diisi.");
+                            _showMessage(
+                              "Kata kunci atau preferensi wajib diisi.",
+                            );
                             return;
                           }
 
@@ -122,10 +121,7 @@ class _MotivationScreenState extends State<MotivationScreen> {
                             return;
                           }
 
-                          final success = await provider.generate(
-                            theme,
-                            total,
-                          );
+                          final success = await provider.generate(theme, total);
 
                           if (!dialogContext.mounted) return;
 
@@ -148,10 +144,10 @@ class _MotivationScreenState extends State<MotivationScreen> {
                               ),
                             ),
                             SizedBox(width: 10),
-                            Text("Generating..."),
+                            Text("Mencari..."),
                           ],
                         )
-                      : const Text("Generate"),
+                      : const Text("Cari"),
                 ),
               ],
             );
@@ -169,7 +165,7 @@ class _MotivationScreenState extends State<MotivationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Delcom Motivation",
+          "Wisata Samosir",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
@@ -183,7 +179,7 @@ class _MotivationScreenState extends State<MotivationScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: showGenerateDialog,
         icon: const Icon(Icons.auto_awesome),
-        label: const Text("Generate"),
+        label: const Text("Cari Wisata Samosir"),
         backgroundColor: const Color(0xFF6366F1),
         foregroundColor: Colors.white,
       ),
@@ -204,10 +200,7 @@ class _MotivationScreenState extends State<MotivationScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      provider.errorMessage!,
-                      textAlign: TextAlign.center,
-                    ),
+                    Text(provider.errorMessage!, textAlign: TextAlign.center),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: provider.fetchMotivations,
@@ -238,25 +231,21 @@ class _MotivationScreenState extends State<MotivationScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFF6366F1),
-                            Color(0xFF8B5CF6),
-                          ],
+                          colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
                         ),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.15),
                             blurRadius: 12,
                             offset: const Offset(0, 6),
-                          )
+                          ),
                         ],
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 "#$number",
@@ -276,10 +265,47 @@ class _MotivationScreenState extends State<MotivationScreen> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            item.text,
+                            item.placeName,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            "Deskripsi",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            item.description,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            "Alasan",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            item.reason,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
                               height: 1.5,
                             ),
                           ),
@@ -306,9 +332,7 @@ class _MotivationScreenState extends State<MotivationScreen> {
           if (provider.isGenerating)
             Container(
               color: Colors.black.withValues(alpha: 0.3),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             ),
         ],
       ),

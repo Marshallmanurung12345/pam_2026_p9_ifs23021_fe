@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeNotifier>(
         builder: (context, themeNotifier, _) {
           return MaterialApp(
-            title: 'Delcom Motivation',
+            title: 'Wisata Samosir',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
