@@ -1,6 +1,7 @@
 class ApiConstants {
   // Ganti dengan URL deploy kamu saat production
-  static const String baseUrl = "http://127.0.0.1:5000";
+  static const String baseUrl =
+      "https://pam-2026-p9-ifs23021.marshalll.fun:8080";
 
   // Motivations
   static const String motivations = "$baseUrl/motivations";
