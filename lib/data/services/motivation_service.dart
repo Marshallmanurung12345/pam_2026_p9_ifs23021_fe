@@ -36,7 +36,7 @@ class MotivationService {
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception(
-        'Failed to generate recommendations: ${response.statusCode}',
+        'Failed to generate recommendations: ${response.statusCode} ${response.body}',
       );
     }
   }
