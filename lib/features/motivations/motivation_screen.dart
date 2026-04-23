@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/theme/theme_notifier.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/motivation_provider.dart';
 
 class MotivationScreen extends StatefulWidget {
@@ -170,6 +171,10 @@ class _MotivationScreenState extends State<MotivationScreen> {
         ),
         centerTitle: false,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => context.read<AuthProvider>().logout(),
+          ),
           IconButton(
             icon: const Icon(Icons.dark_mode),
             onPressed: theme.toggleTheme,

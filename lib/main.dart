@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_notifier.dart';
-import 'features/motivations/motivation_screen.dart';
+import 'features/auth/auth_gate.dart';
+import 'providers/auth_provider.dart';
 import 'providers/motivation_provider.dart';
 
 void main() {
@@ -28,7 +29,15 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
-        ChangeNotifierProvider(create: (_) => MotivationProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()..initialize()),
+        ChangeNotifierProxyProvider<AuthProvider, MotivationProvider>(
+          create: (_) => MotivationProvider(),
+          update: (_, authProvider, motivationProvider) {
+            final provider = motivationProvider ?? MotivationProvider();
+            provider.updateAuth(authProvider);
+            return provider;
+          },
+        ),
       ],
       child: Consumer<ThemeNotifier>(
         builder: (context, themeNotifier, _) {
@@ -38,7 +47,7 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeNotifier.themeMode,
-            home: const MotivationScreen(),
+            home: const AuthGate(),
           );
         },
       ),

@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
+
 import '../data/models/motivation_model.dart';
 import '../data/services/motivation_service.dart';
+import 'auth_provider.dart';
 
 class MotivationProvider extends ChangeNotifier {
+  AuthProvider? _authProvider;
   List<Motivation> motivations = [];
   int page = 1;
   bool isLoading = false;
   bool hasMore = true;
   String? errorMessage;
-
-  // 🔥 NEW
   bool isGenerating = false;
+
+  void updateAuth(AuthProvider authProvider) {
+    final wasAuthenticated = _authProvider?.isAuthenticated ?? false;
+    _authProvider = authProvider;
+
+    if (!authProvider.isAuthenticated && wasAuthenticated) {
+      reset();
+    }
+  }
+
+  void reset() {
+    motivations = [];
+    page = 1;
+    isLoading = false;
+    hasMore = true;
+    errorMessage = null;
+    isGenerating = false;
+    notifyListeners();
+  }
 
   Future<void> fetchMotivations() async {
     if (isLoading || !hasMore) return;
@@ -31,6 +51,9 @@ class MotivationProvider extends ChangeNotifier {
         );
         page++;
       }
+    } on UnauthorizedException {
+      errorMessage = 'Sesi berakhir. Silakan login kembali.';
+      await _authProvider?.logout();
     } catch (e) {
       errorMessage = e.toString();
     } finally {
@@ -53,6 +76,10 @@ class MotivationProvider extends ChangeNotifier {
 
       await fetchMotivations();
       return errorMessage == null;
+    } on UnauthorizedException {
+      errorMessage = 'Sesi berakhir. Silakan login kembali.';
+      await _authProvider?.logout();
+      return false;
     } catch (e) {
       errorMessage = e.toString();
       return false;
