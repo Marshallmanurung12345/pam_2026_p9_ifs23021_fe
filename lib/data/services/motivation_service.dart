@@ -28,15 +28,20 @@ class MotivationService {
   }
 
   static Future<void> generateMotivation(String theme, int total) async {
+    final payload = {'theme': theme, 'total': total};
     final response = await http.post(
       Uri.parse(ApiConstants.generate),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'theme': theme, 'total': total}),
+      body: jsonEncode(payload),
     );
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception(
-        'Failed to generate recommendations: ${response.statusCode} ${response.body}',
+        'Failed to generate recommendations: '
+        '${response.statusCode} '
+        'url=${ApiConstants.generate} '
+        'payload=${jsonEncode(payload)} '
+        'response=${response.body}',
       );
     }
   }
