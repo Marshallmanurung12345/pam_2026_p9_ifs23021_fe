@@ -37,9 +37,9 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(authProvider.errorMessage!)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(authProvider.errorMessage!)));
   }
 
   @override

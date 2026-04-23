@@ -46,9 +46,7 @@ class MotivationProvider extends ChangeNotifier {
       if (data.isEmpty) {
         hasMore = false;
       } else {
-        motivations.addAll(
-          data.map((e) => Motivation.fromJson(e)).toList(),
-        );
+        motivations.addAll(data.map((e) => Motivation.fromJson(e)).toList());
         page++;
       }
     } on UnauthorizedException {

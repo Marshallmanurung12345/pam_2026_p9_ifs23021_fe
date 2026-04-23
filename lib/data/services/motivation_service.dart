@@ -21,10 +21,7 @@ class MotivationService {
       ApiConstants.recommendations,
     ).replace(queryParameters: {'page': page.toString()});
 
-    final response = await http.get(
-      uri,
-      headers: _authorizedHeaders(token),
-    );
+    final response = await http.get(uri, headers: _authorizedHeaders(token));
 
     if (response.statusCode == 401) {
       throw const UnauthorizedException();
@@ -77,8 +74,6 @@ class MotivationService {
       throw const UnauthorizedException('Token tidak tersedia.');
     }
 
-    return {
-      'Authorization': 'Bearer $token',
-    };
+    return {'Authorization': 'Bearer $token'};
   }
 }

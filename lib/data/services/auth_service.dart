@@ -21,10 +21,7 @@ class AuthService {
     final response = await http.post(
       Uri.parse(ApiConstants.login),
       headers: const {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': username,
-        'password': password,
-      }),
+      body: jsonEncode({'username': username, 'password': password}),
     );
 
     if (response.statusCode != 200) {
@@ -44,9 +41,7 @@ class AuthService {
   static Future<Map<String, dynamic>> getCurrentUser(String token) async {
     final response = await http.get(
       Uri.parse(ApiConstants.me),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
